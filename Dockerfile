@@ -1,43 +1,64 @@
-FROM ghcr.io/linuxserver/baseimage-ubuntu:bionic
+# build jackett for musl
+FROM vcxpz/baseimage-ubuntu-dotnet:latest AS builder
+
+# environment settings
+ARG VERSION
+
+RUN \
+	if [ -z ${VERSION+x} ]; then \
+		VERSION=$(curl -sL "https://api.github.com/repos/Ombi-app/Ombi/releases" | jq -r 'first(.[] | select(.prerelease == true)) | .tag_name' | cut -c 2-); \
+	fi && \
+	curl --silent -o \
+		/tmp/ombi.tar.gz -L \
+		"https://github.com/Ombi-app/Ombi/archive/v${VERSION}.tar.gz" && \
+	tar xzf \
+		/tmp/ombi.tar.gz -C \
+		/tmp/ --strip-components=1 && \
+	if [ "$(arch)" = "x86_64" ]; then \
+		ARCH="x64"; \
+	elif [ "$(arch)" == "aarch64" ]; then \
+		ARCH="arm64"; \
+	fi && \
+	dotnet publish /tmp/src/Ombi \
+		-f net5.0 \
+		--self-contained \
+		-c Release \
+		-r linux-musl-${ARCH} \
+		/p:TrimUnusedDependencies=true \
+		/p:PublishTrimmed=true \
+		-o /out && \
+	echo "**** cleanup ****" && \
+	chmod +x /out/Ombi && \
+     echo "**** done building ombi ****"
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# runtime stage
+FROM vcxpz/baseimage-alpine:latest
 
 # set version label
 ARG BUILD_DATE
 ARG VERSION
-ARG OMBI_RELEASE
-LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
-LABEL maintainer="aptalca"
-
-# environment settings
-ENV HOME="/config"
+LABEL build_version="Ombi version:- ${VERSION} Build-date:- ${BUILD_DATE}"
+LABEL maintainer="hydaz"
 
 RUN \
- apt-get update && \
- apt-get install -y \
-	jq \
-	libicu60 \
-	libssl1.0 && \
- echo "**** install ombi ****" && \
- mkdir -p \
-	/opt/ombi && \
- if [ -z ${OMBI_RELEASE+x} ]; then \
-	OMBI_RELEASE=$(curl -sX GET "https://api.github.com/repos/Ombi-app/Ombi/releases" \
-	| jq -r 'first(.[] | select(.prerelease == true)) | .tag_name'); \
- fi && \
- OMBI_DURL="https://github.com/Ombi-app/Ombi/releases/download/${OMBI_RELEASE}/linux-x64.tar.gz" && \
- curl -o \
-	/tmp/ombi.tar.gz -L \
-	"${OMBI_DURL}" && \
- tar xzf /tmp/ombi.tar.gz -C \
-	/opt/ombi && \
- chmod +x /opt/ombi/Ombi && \
- echo "**** clean up ****" && \
- rm -rf \
-	/tmp/* \
-	/var/lib/apt/lists/* \
-	/var/tmp/*
+	echo "**** install runtime packages ****" && \
+	apk add --no-cache --upgrade \
+		libintl \
+		libssl1.1 \
+		libstdc++ \
+		icu-libs && \
+	echo "**** cleanup ****" && \
+	rm -rf \
+		/tmp/*
 
-# add local files
-COPY /root /
+# copy files from builder
+COPY --from=builder /out /app/ombi
+
+# add local files
+COPY root/ /
 
 # ports and volumes
+VOLUME /config
 EXPOSE 3579

@@ -1,6 +1,17 @@
 #!/usr/bin/with-contenv bash
 
-cd /opt/ombi || exit
+cd /app/ombi || exit
 
-exec \
-	s6-setuidgid abc /opt/ombi/Ombi --storage "/config" --host http://*:3579
+redirect_cmd() {
+	if [[ "${DEBUG}" == "true" ]]; then
+		"$@"
+	else
+		"$@" >/dev/null 2>&1
+	fi
+}
+
+echo "Starting Ombi."
+redirect_cmd exec s6-setuidgid abc \
+	/app/ombi/Ombi \
+	---storage "/config" \
+	--host http://*:3579
