@@ -1,10 +1,16 @@
-# build jackett for musl
-FROM vcxpz/baseimage-ubuntu-dotnet:latest AS builder
+# build ombi for musl
+FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS builder
 
 # environment settings
 ARG VERSION
 
 RUN \
+	echo "**** install runtime packages ****" && \
+	apt-get update && \
+	apt-get install -y \
+		binutils \
+		musl-tools \
+          jq && \
 	if [ -z ${VERSION+x} ]; then \
 		VERSION=$(curl -sL "https://api.github.com/repos/Ombi-app/Ombi/releases" | jq -r 'first(.[] | select(.prerelease == true)) | .tag_name' | cut -c 2-); \
 	fi && \
