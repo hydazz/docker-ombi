@@ -13,5 +13,5 @@ redirect_cmd() {
 echo "Starting Ombi."
 redirect_cmd exec s6-setuidgid abc \
 	/app/ombi/Ombi \
-	---storage "/config" \
+	--storage "/config" \
 	--host http://*:3579
