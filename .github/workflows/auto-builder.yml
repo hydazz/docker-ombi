@@ -43,7 +43,7 @@ jobs:
             --platform=amd64 \
             --output "type=docker" \
             --build-arg BUILD_DATE="$(date +%Y-%m-%d)" \
-            --build-arg VERSION=$(curl -sL "https://api.github.com/repos/hydazz/docker-Ombi/releases/latest" | jq -r '.tag_name') \
+            --build-arg VERSION=$(curl -sL "https://api.github.com/repos/hydazz/docker-ombi/releases/latest" | jq -r '.tag_name') \
             --tag vcxpz/ci-build:ci-build \
             --file Dockerfile .
 
@@ -53,9 +53,9 @@ jobs:
             --platform=linux/amd64 \
             --output "type=image,push=true" \
             --build-arg BUILD_DATE="$(date +%Y-%m-%d)" \
-            --build-arg VERSION=$(curl -sL "https://api.github.com/repos/hydazz/docker-Ombi/releases/latest" | jq -r '.tag_name') \
-            --tag vcxpz/Ombi:$(curl -sL "https://api.github.com/repos/hydazz/docker-Ombi/releases/latest" | jq -r '.tag_name') \
-            --tag vcxpz/Ombi:latest \
+            --build-arg VERSION=$(curl -sL "https://api.github.com/repos/hydazz/docker-ombi/releases/latest" | jq -r '.tag_name') \
+            --tag vcxpz/ombi:$(curl -sL "https://api.github.com/repos/hydazz/docker-ombi/releases/latest" | jq -r '.tag_name') \
+            --tag vcxpz/ombi:latest \
             --file Dockerfile .
 
       - name: Get New Package Versions From Image
@@ -74,5 +74,5 @@ jobs:
         with:
           username: vcxpz
           password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: vcxpz/Ombi
+          repository: vcxpz/ombi
 

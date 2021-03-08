@@ -22,7 +22,8 @@ RUN \
 	apt-get install -y \
 		yarn && \
 	if [ -z ${VERSION+x} ]; then \
-		VERSION=$(curl -sL "https://api.github.com/repos/Ombi-app/Ombi/releases" | jq -r 'first(.[] | select(.prerelease == true)) | .tag_name' | cut -c 2-); \
+		VERSION=$(curl -sL "https://api.github.com/repos/Ombi-app/Ombi/releases" | \
+			jq -r 'first(.[] | select(.prerelease == true)) | .tag_name' | cut -c 2-); \
 	fi && \
 	echo "**** download ombi ****" && \
 	curl --silent -o \
