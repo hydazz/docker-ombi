@@ -49,6 +49,8 @@ RUN \
 		-r linux-musl-${ARCH} \
 		/p:TrimUnusedDependencies=true \
 		/p:PublishTrimmed=true \
+		/p:FullVer=${VERSION} \
+		/p:SemVer=${VERSION} \
 		-o /out && \
 	echo "**** cleanup ****" && \
 	chmod +x /out/Ombi && \
