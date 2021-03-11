@@ -32,12 +32,6 @@ RUN \
 	tar xzf \
 		/tmp/ombi.tar.gz -C \
 		/tmp/ --strip-components=1 && \
-	echo "**** determine architecture ****" && \
-	if [ "$(arch)" = "x86_64" ]; then \
-		ARCH="x64"; \
-	elif [ "$(arch)" == "aarch64" ]; then \
-		ARCH="arm64"; \
-	fi && \
 	echo "**** build ombi ****" && \
 	cd /tmp/src/Ombi/ClientApp && \
 	yarn install && \
@@ -46,7 +40,7 @@ RUN \
 		-f net5.0 \
 		--self-contained \
 		-c Release \
-		-r linux-musl-${ARCH} \
+		-r linux-musl-x64 \
 		/p:TrimUnusedDependencies=true \
 		/p:PublishTrimmed=true \
 		/p:FullVer=${VERSION} \
