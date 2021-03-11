@@ -50,7 +50,7 @@ jobs:
       - name: Build And Push The Docker Image
         run: |
           docker buildx build \
-            --platform=linux/amd64 \
+            --platform=linux/amd64,linux/arm64 \
             --output "type=image,push=true" \
             --build-arg BUILD_DATE="$(date +%Y-%m-%d)" \
             --build-arg VERSION=$(curl -sL "https://api.github.com/repos/hydazz/docker-ombi/releases/latest" | jq -r '.tag_name') \
