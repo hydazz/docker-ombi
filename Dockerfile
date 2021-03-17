@@ -4,7 +4,7 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS builder
 # environment settings
 ARG VERSION
 
-RUN \
+RUN set -xe && \
 	echo "**** install runtime packages ****" && \
 	apt-get update && \
 	apt-get install -y \
@@ -26,7 +26,7 @@ RUN \
 			jq -r 'first(.[] | select(.prerelease == true)) | .tag_name' | cut -c 2-); \
 	fi && \
 	echo "**** download ombi ****" && \
-	curl --silent -o \
+	curl -o \
 		/tmp/ombi.tar.gz -L \
 		"https://github.com/Ombi-app/Ombi/archive/v${VERSION}.tar.gz" && \
 	tar xzf \
@@ -64,7 +64,7 @@ LABEL maintainer="hydaz"
 # environment settings
 ENV HOME="/config"
 
-RUN \
+RUN set -xe && \
 	echo "**** install runtime packages ****" && \
 	apk add --no-cache \
 		libintl \
