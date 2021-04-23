@@ -21,7 +21,7 @@ RUN set -xe && \
 	apt-get update && \
 	apt-get install -y \
 		yarn && \
-	if [ -z ${VERSION+x} ]; then \
+	if [ -z ${VERSION} ]; then \
 		VERSION=$(curl -sL "https://api.github.com/repos/Ombi-app/Ombi/releases" | \
 			jq -r 'first(.[] | select(.prerelease == true)) | .tag_name' | cut -c 2-); \
 	fi && \
