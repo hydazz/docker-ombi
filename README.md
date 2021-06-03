@@ -2,7 +2,7 @@
 
 [![docker hub](https://img.shields.io/badge/docker_hub-link-blue?style=for-the-badge&logo=docker)](https://hub.docker.com/r/vcxpz/ombi) ![docker image size](https://img.shields.io/docker/image-size/vcxpz/ombi?style=for-the-badge&logo=docker) [![auto build](https://img.shields.io/badge/docker_builds-automated-blue?style=for-the-badge&logo=docker?color=d1aa67)](https://github.com/hydazz/docker-ombi/actions?query=workflow%3A"Auto+Builder+CI") [![codacy branch grade](https://img.shields.io/codacy/grade/dfdd0b68026946ff81030fa81cd8c250/main?style=for-the-badge&logo=codacy)](https://app.codacy.com/gh/hydazz/docker-ombi)
 
-Fork of [linuxserver/docker-ombi](https://github.com/linuxserver/docker-ombi/)
+Fork of [linuxserver/docker-ombi](https://github.com/linuxserver/docker-ombi/) (Equivalent to v4.0.1342-ls94)
 
 [Ombi](https://ombi.io/) allows you to host your own Plex Request and user management system. If you are sharing your Plex server with other users, allow them to request new content using an easy to manage interface! Manage all your requests for Movies and TV with ease, leave notes for the user and get notification when a user requests something. Allow your users to post issues against their requests so you know there is a problem with the audio etc. Even automatically send them weekly newsletters of new content that has been added to your Plex server!
 
